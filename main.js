@@ -14,6 +14,16 @@ app.use(bodyparser.urlencoded({extended:true}));
 app.use(bodyparser.json());
 //#endregion
 
+//#region Register
+const registerRouter=require("./Routes/RegisterRoutes");
+app.use("/api/register",registerRouter);
+//#endregion
+
+//#region Login
+const loginRouter=require("./Routes/LoginRoutes");
+
+app.use("/api/login",loginRouter);
+//#endregion
 
 //#region Products
 const productRoutes=require("./Routes/ProductRoutes");
