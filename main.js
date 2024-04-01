@@ -30,4 +30,10 @@ app.use("/api/receipt",receiptRouter);
 
 
 
+//////////////////////////////////////////////////////////////
+const feedbackRoutes=require("./Routes/FeedBackRoutes");
+app.use("/api/feedbacks",feedbackRoutes);
+
+
+
 app.listen(port,()=>{console.log("http://localhost:"+port)});
