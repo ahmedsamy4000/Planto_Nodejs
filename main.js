@@ -7,20 +7,26 @@ const mongoose = require('mongoose');
 
 
 
-mongoose.connect("mongodb://localhost:27017/Planto");
+mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.mongodb.net/Planto");
 
-
+//#region MiddleWares
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(bodyparser.json());
+//#endregion
 
 
-
-
-
-//////////////////////////////////////////////////////////
+//#region Products
 const productRoutes=require("./Routes/ProductRoutes");
 
 app.use("/api/products",productRoutes);
+//#endregion
+
+
+//#region Receipt
+const receiptRouter=require("./Routes/ReceiptRoutes");
+
+app.use("/api/receipt",receiptRouter);
+//#endregion
 
 
 
