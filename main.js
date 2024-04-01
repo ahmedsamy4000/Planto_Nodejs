@@ -1,10 +1,10 @@
 const express=require('express');
 const app=express();
-const port=process.env.PORT||7005;
+const port=process.env.PORT||7500;
 const bodyparser=require("body-parser");
 const path=require('path');
 const mongoose = require('mongoose');
-
+const cors = require('cors');
 
 
 mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.mongodb.net/Planto");
@@ -12,6 +12,7 @@ mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.m
 //#region MiddleWares
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(bodyparser.json());
+app.use(cors())
 //#endregion
 
 //#region Register
