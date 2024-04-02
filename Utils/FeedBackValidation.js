@@ -2,6 +2,10 @@ const Ajv=require('ajv');
 const ajv=new Ajv();
 
 
+ajv.addFormat('date-time', {
+    validate: (dateTimeString) => dateTimeRegex.test(dateTimeString)
+  })
+
 
 
 let FeedBackSchema={
@@ -9,9 +13,9 @@ let FeedBackSchema={
     properties:{
         userID:{type:"number"},
         body:{type:"string"},
-        date:{type: "string"},
+        date:{type: "string", format: "date-time"},
     },
-    required:["userID","body","date"],
+    required:["userID","body"],
     additionalProperties:false
 }
 
