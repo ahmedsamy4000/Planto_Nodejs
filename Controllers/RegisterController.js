@@ -11,7 +11,7 @@ let Register = async (req, res) => {
 
         let user = await userModel.findOne({ email: req.body.email })
         if (user)
-            return res.status(400).json({ message: false });
+            return res.status(200).json({ message: false });
 
         let users = await userModel.find({});
         id = users ? users[users.length - 1]._id + 1 : 1;
@@ -26,7 +26,7 @@ let Register = async (req, res) => {
             res.status(200).json({ message: true, data: newUser });
         })
     } else {
-        res.status(400).json({ message: userValidation.errors[0].message });
+        res.status(200).json({ message: userValidation.errors[0].message });
     }
 }
 
