@@ -6,17 +6,15 @@ const product_controller=require("../Controllers/ProductController");
 const productValidation=require("../Utils/ProductValidation");
 
 
-let courses=[];
-let crsID=0;
 router.get("/",product_controller.getallProducts);
 
-router.get("/:id",product_controller.getProductById);
+router.get("/:name",product_controller.getProductByName);
 
 router.post("/",product_controller.addNewProduct);
 
 
-router.put("/:id",product_controller.updateProductById);
+router.put("/:name",product_controller.updateProductByName);
 
-router.delete("/:id",product_controller.deleteProductById);
+router.delete("/:name",product_controller.deleteProductByName);
 
 module.exports=router;

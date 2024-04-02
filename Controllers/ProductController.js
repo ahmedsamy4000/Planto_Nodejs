@@ -1,69 +1,87 @@
-
-
-
-const productValidation=require("../Utils/ProductValidation");
+const productValidation = require("../Utils/ProductValidation");
 const ProductModel = require("../Models/ProductModel");
 
-
-
-let getallProducts= async (req,res)=>{
-    let allProducts=await ProductModel.getallProducts();
-    res.status(200).json({data:allProducts});
-
+let getallProducts = async (req, res) => {
+    try {
+        let allProducts = await ProductModel.getallProducts();
+        res.status(200).json({ data: allProducts });
+    } catch (error) {
+        console.error("Error retrieving products:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 };
 
-let getProductById= async (req,res)=>{
-    let id =req.params.id;
-   let filterProduct= await productModel.findProductsById(id);
-    if(filterProduct){res.json({message:"Founded",data:filterProduct})}
-    else{res.json({message:"no Products founded"})}
-    
-    };
-
-let addNewProduct= async (req,res)=>{
-    
-    if(productValidation(req.body)){
-        let newProduct=new ProductModel(req.body);
-        newProduct.SaveProduct(); 
-       // students.push(newstudent);
-        res.status(200).json({data:newProduct,message:"added successfully"});
-    }else{
-        res.json({message:productValidation.errors[0].message});
+let getProductByName = async (req, res) => {
+    try {
+        let name = req.params.name;
+        let filterProduct = await ProductModel.findProductsByName(name);
+        if (filterProduct) {
+            res.json({ message: "Founded", data: filterProduct });
+        } else {
+            res.json({ message: "No products found" });
+        }
+    } catch (error) {
+        console.error("Error retrieving product by name:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-   
-
 };
-let updateProductById= async(req,res)=>{
-    let id=req.params.id;
-    let f=0;
-    let updatedProduct=[];
-    if(ProductValidation(req.body)){
-        req.body.id=+id;
-         updatedProduct=req.body;
-       let result=await ProductModel.UpdateCourse(id,updatedProduct);
-       if(result){f=1;}
-       console.log(result);
-       console.log(updatedProduct);
-    }else{
-        res.json({message:ProductValidation.errors[0].message})
+
+let addNewProduct = async (req, res) => {
+    try {
+        if (productValidation(req.body)) {
+            let newProduct = new ProductModel(req.body);
+            await newProduct.saveProduct();
+            res.status(200).json({ data: newProduct, message: "Added successfully" });
+        } else {
+            res.status(400).json({ message: productValidation.errors[0].message });
+        }
+    } catch (error) {
+        console.error("Error adding new product:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-    if(f==1){res.json({data:updatedProduct, message:"Updated Succesfully"})}
-    else {res.json({message:"Product Not Found"})};
-}
-let deleteProductById= async(req,res)=>{
-    let id=+req.params.id;
+};
 
-    let result=await ProductModel.DeleteCourse(id);
-    console.log(result);
-    if(result){ res.json({message:"Deleted Successfully"});}
-    else{ res.json({message:"Product Not Found"})}
-    };
+let updateProductByName = async (req, res) => {
+    try {
+        let name = req.params.name;
+        let updatedProduct = null;
+        if (productValidation(req.body)) {
+            req.body.name = name;
+            updatedProduct = req.body;
+            let result = await ProductModel.updateProductByName(name, updatedProduct);
+            if (result) {
+                res.status(200).json({ data: updatedProduct, message: "Updated successfully" });
+            } else {
+                res.status(404).json({ message: "Product not found" });
+            }
+        } else {
+            res.status(400).json({ message: productValidation.errors[0].message });
+        }
+    } catch (error) {
+        console.error("Error updating product by name:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
 
+let deleteProductByName = async (req, res) => {
+    try {
+        let name = req.params.name;
+        let result = await ProductModel.deleteProductByName(name);
+        if (result) {
+            res.status(200).json({ message: "Deleted successfully" });
+        } else {
+            res.status(404).json({ message: "Product not found" });
+        }
+    } catch (error) {
+        console.error("Error deleting product by name:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
 
-module.exports={
+module.exports = {
     getallProducts,
-    getProductById,
+    getProductByName,
     addNewProduct,
-    updateProductById,
-    deleteProductById
-}
+    updateProductByName,
+    deleteProductByName
+};

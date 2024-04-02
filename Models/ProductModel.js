@@ -3,63 +3,87 @@ const mongoose = require('mongoose');
 
 let ProductSchema=new mongoose.Schema({
         "name": String,
-        "id":Number
-})
+        "price": String ,
+        "description": String,
+        "images": Array ,
+       "stock": Number,
+        "category": String,
+        "count": Number,
+        "rate" :Number
+})  
 let Products=mongoose.model("products",ProductSchema)
 
 
 var db=mongoose.connection;
 
 
-
-
-let p_id=0;
-
-class ProductModel{
-    name="";
-    id=0;
-    constructor(product){
-        this.name=product.name;  
-        this.id=product.id;
-    }
+    class ProductModel {
+        constructor(product) {
+            this.name = product.name;
+            this.price = product.price;
+            this.description = product.description;
+            this.images = product.images;
+            this.stock = product.stock;
+            this.category = product.category;
+            this.count = product.count;
+            this.rate = product.rate;
+        }
     
     static async getallProducts(){
        
        return await Products.find();
     }
-    static async findProductsById(id){
-        let foundProduct=await Products.findOne({id:+id});
+    static async findProductsByName(name){
+        let foundProduct=await Products.findOne({name:name});
         return foundProduct;
     }
-    async SaveProduct(){ 
-        this.id = ++p_id;
-        const newProduct = new Products({
-            name: this.name,
-            id: this.id
-        });
-        await newProduct.save();
-        return newProduct;
-    }
-
-   static async UpdateProduct(id,data){
-        let result=await Products.updateOne({id:id},data);
-       
-        if (result.modifiedCount > 0) {
-            return true; // Update successful
-        } else {
-            return false; // No documents were modified
+    async saveProduct() {
+        try {
+            const newProduct = new Products({
+                name: this.name,
+                price: this.price,
+                description: this.description,
+                images: this.images,
+                stock: this.stock,
+                category: this.category,
+                count: this.count,
+                rate: this.rate
+            });
+            await newProduct.save();
+            return newProduct;
+        } catch (error) {
+            console.error('Error saving product:', error);
+            throw error;
         }
     }
-    static async DeleteProduct(id){
-        let result=await Products.deleteOne({id:id});
-        console.log(result);
-        if(result.deletedCount>0){
-            return true;
-        }else{
-            return false;
+
+     static async updateProductByName(name, data) {
+        try {
+            const result = await Products.findOneAndUpdate({ name: name }, data);
+            if (result) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error('Error updating product:', error);
+            throw error;
         }
     }
     
+    static async deleteProductByName(name) {
+        try {
+            const result = await Products.findOneAndDelete({ name: name });
+            if (result) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            throw error;
+        }
+    }
 }
 
 module.exports=ProductModel;
