@@ -26,6 +26,11 @@ const loginRouter=require("./Routes/LoginRoutes");
 app.use("/api/login",loginRouter);
 //#endregion
 
+//#region Users
+const userRouter=require("./Routes/UserRoutes");
+app.use("/api/user",userRouter);
+//#endregion
+
 //#region Products
 const productRoutes=require("./Routes/ProductRoutes");
 

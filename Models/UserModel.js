@@ -10,7 +10,8 @@ let UserSchema = new mongoose.Schema({
     "cart": Array,
     "fav": Array,
     "address": Object,
-    "isAdmin":Boolean
+    "phone": String,
+    "isAdmin": Boolean
 });
 
-module.exports = mongoose.model('users', UserSchema);
+module.exports = mongoose.model('users', UserSchema);
