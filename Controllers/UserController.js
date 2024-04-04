@@ -1,6 +1,7 @@
 const UserModel = require('../Models/UserModel')
-let GetUserByEmail = async(req, res)=>{
-    let user = await UserModel.findOne({email: req.params.email.toLowerCase()});
+const UserValidation = require('../Utils/UserValidation')
+let GetUserByEmail = async (req, res) => {
+    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
     if (user) {
         res.status(200).json({ data: user })
     } else {
@@ -8,6 +9,21 @@ let GetUserByEmail = async(req, res)=>{
     }
 }
 
+let UpdateUser = async (req, res) => {
+    if (UserValidation(req.body)) {
+        let newUser = await UserModel.findOneAndUpdate({ email: req.params.email }, {
+            "name": req.body.name, "email": req.body.email,
+            "phone": req.body.phone, "gender": req.body.gender, "address": req.body.addres, "age": req.body.age, "password": req.body.password
+        });
+        if (newUser) {
+            res.status(200).json({ message: "Updated successfully" })
+        }
+    } else {
+        res.json({ message: UserValidation.errors[0].message });
+    }
+}
+
 module.exports = {
-    GetUserByEmail
+    GetUserByEmail, 
+    UpdateUser
 }
