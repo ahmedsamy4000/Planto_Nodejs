@@ -94,7 +94,7 @@ function productsStat(data) {
     });
 
 
-console.log(productQuantities)
+console.log(productQuantities);
 
    return productQuantities
 }
