@@ -82,23 +82,21 @@ let getReceiptsByMonth = async (req, res) => {
 
 function productsStat(data) {
     const productQuantities = {};
+    console.log(data)
     data.forEach(entry => {
         entry.product.forEach(product => {
-            //const parsedProduct = JSON.parse(product); 
-            product= JSON.parse(product)
-            console.log(product);            
-            if (productQuantities) {
+            const { name, quantity } = product;
+            console.log(name);
+            if (productQuantities[name]) {
+                productQuantities[name] += quantity;
             } else {
+                productQuantities[name] = quantity;
             }
         });
     });
-
-
-console.log(productQuantities);
-
+    console.log(productQuantities);
    return productQuantities
 }
-
 
 
 module.exports = {
