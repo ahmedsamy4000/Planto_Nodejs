@@ -58,10 +58,54 @@ let DeleteReceipt = async (req, res) => {
     }
 }
 
+let getReceiptsByMonth = async (req, res) => {
+    try {
+        let month = parseInt(req.params.month);
+        
+        const Data = await ReceiptModel.aggregate([
+            {
+                $match: {
+                    $expr: {
+                        $eq: [{ $month: '$date' }, month]
+                    }
+                }
+            }
+        ]);
+       lastData= productsStat(Data)
+
+        res.status(200).json({ data: lastData });
+    } catch (error) {
+        console.error("Error fetching receipts:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+function productsStat(data) {
+    const productQuantities = {};
+    data.forEach(entry => {
+        entry.product.forEach(product => {
+            //const parsedProduct = JSON.parse(product); 
+            product= JSON.parse(product)
+            console.log(product);            
+            if (productQuantities) {
+            } else {
+            }
+        });
+    });
+
+
+console.log(productQuantities)
+
+   return productQuantities
+}
+
+
+
 module.exports = {
     GetAllReceipts,
     GetReceiptByID,
     AddReceipt,
     UpdateReceipt,
     DeleteReceipt,
+    getReceiptsByMonth
 }
