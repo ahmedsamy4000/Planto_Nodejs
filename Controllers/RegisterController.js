@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const userModel = require('../Models/UserModel')
 const userValidation = require("../Utils/UserValidation")
+const jwt = require('jsonwebtoken')
 
 let id = 0;
 let Register = async (req, res) => {
@@ -22,11 +23,14 @@ let Register = async (req, res) => {
         req.body.password = hash;
         req.body.isAdmin = false;
         let newUser = new userModel(req.body);
-        newUser.save().then(() => {
-            res.status(200).json({ message: true, data: newUser });
+        newUser.save().then(async() => {
+            let JWT = await jwt.sign({ email: newUser.email, id: newUser._id }, "Planto");
+            //res.header("x-auth-token", JWT);
+            return res.status(200).json({ message: true ,token:JWT});
+            
         })
     } else {
-        res.status(200).json({ message: userValidation.errors[0].message });
+        res.status(200).json({ message: false,error:userValidation.errors[0].messag });
     }
 }
 
