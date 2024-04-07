@@ -35,7 +35,7 @@ let AddToCart = async (req, res) => {
             user.cart = [];
         }
         let myCart = user.cart;
-        myCart.push({ product: req.body.product, totalPrice: req.body.totalPrice });
+        myCart.push({ product: req.body.product, quantity: req.body.quantity });
         let newUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
             "cart": myCart, "name": user.name, "email": user.email,
             "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
