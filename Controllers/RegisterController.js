@@ -15,7 +15,7 @@ let Register = async (req, res) => {
             return res.status(200).json({ message: false });
 
         let users = await userModel.find({});
-        id = users ? users[users.length - 1]._id + 1 : 1;
+        id = users.length > 0 ? users[users.length - 1]._id + 1 : 1;
         req.body._id = id;
 
         let salt = await bcrypt.genSalt(10);
