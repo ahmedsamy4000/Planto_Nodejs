@@ -27,7 +27,29 @@ let UpdateUser = async (req, res) => {
     }
 }
 
+let AddToCart = async (req, res) => {
+    req.body.email = req.body.email.toLowerCase();
+    let user = await UserModel.findOne({ email: req.body.email });
+    if (user) {
+        if (user.cart == undefined) {
+            user.cart = [];
+        }
+        let myCart = user.cart;
+        myCart.push({ product: req.body.product, totalPrice: req.body.totalPrice });
+        let newUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+            "cart": myCart, "name": user.name, "email": user.email,
+            "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
+        });
+        if (newUser) {
+            return res.status(200).json({ message: "true" });
+        }
+        return res.status(200).json({ message: "false" });
+
+    }
+    return res.status(200).json({ message: "false" })
+}
 module.exports = {
-    GetUserByEmail, 
-    UpdateUser
+    GetUserByEmail,
+    UpdateUser,
+    AddToCart
 }
