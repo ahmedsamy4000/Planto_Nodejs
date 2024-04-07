@@ -62,15 +62,8 @@ let getReceiptsByMonth = async (req, res) => {
     try {
         let month = parseInt(req.params.month);
         
-        const Data = await ReceiptModel.aggregate([
-            {
-                $match: {
-                    $expr: {
-                        $eq: [{ $month: '$date' }, month]
-                    }
-                }
-            }
-        ]);
+        let Data = await FilterByMonth(month)
+        console.log(Data)
        lastData= productsStat(Data)
 
         res.status(200).json({ data: lastData });
@@ -94,10 +87,41 @@ function productsStat(data) {
             }
         });
     });
-    console.log(productQuantities);
+   
    return productQuantities
 }
 
+let totalProducts = async (req, res) => {
+    let TotalOrders=0;
+    let TotalProfit=0;
+    try {
+    let month = parseInt(req.params.month);
+    let Data = await FilterByMonth(month)
+    Data.forEach(receipe =>{
+    TotalProfit+=receipe.totalPrice;
+    TotalOrders+=1
+    })
+    Data={TotalProfit,TotalOrders}
+    res.status(200).json({ data: Data });
+    } catch (error) {
+    console.error("Error fetching receipts:", error);
+    res.status(500).json({ error: "Internal server error" });
+    }
+}
+async function FilterByMonth(month){
+    
+    const Data = await ReceiptModel.aggregate([
+        {
+            $match: {
+                $expr: {
+                    $eq: [{ $month: '$date' }, month]
+                }
+            }
+        }
+    ]);
+    return Data;
+}
+    
 
 module.exports = {
     GetAllReceipts,
@@ -105,5 +129,6 @@ module.exports = {
     AddReceipt,
     UpdateReceipt,
     DeleteReceipt,
-    getReceiptsByMonth
+    getReceiptsByMonth,
+    totalProducts
 }
