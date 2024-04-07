@@ -13,7 +13,7 @@ let Login = async (req, res) => {
         return res.status(200).json({ message: false });
 
     let JWT = await jwt.sign({ email: user.email, id: user._id }, "Planto");
-    //res.header("x-auth-token", JWT);
+    res.header("x-auth-token", JWT);
     return res.status(200).json({ message: true ,token:JWT});
 }
 

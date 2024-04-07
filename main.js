@@ -12,7 +12,9 @@ mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.m
 //#region MiddleWares
 app.use(bodyparser.urlencoded({extended:true}));
 app.use(bodyparser.json());
-app.use(cors())
+app.use(cors({
+    exposedHeaders: ["x-auth-token"],
+}))
 //#endregion
 
 //#region Register

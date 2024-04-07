@@ -25,7 +25,7 @@ let Register = async (req, res) => {
         let newUser = new userModel(req.body);
         newUser.save().then(async() => {
             let JWT = await jwt.sign({ email: newUser.email, id: newUser._id }, "Planto");
-            //res.header("x-auth-token", JWT);
+            res.header("x-auth-token", JWT);
             return res.status(200).json({ message: true ,token:JWT});
             
         })
