@@ -12,9 +12,9 @@ let Login = async (req, res) => {
     if (!pass)
         return res.status(200).json({ message: false });
 
-    let JWT = await jwt.sign({ email: user.email, id: user._id }, "Planto");
+    let JWT = await jwt.sign({ email: user.email, id: user._id, isAdmin: user.isAdmin }, "Planto");
     res.header("x-auth-token", JWT);
-    return res.status(200).json({ message: true });
+    return res.status(200).json({ message: true ,token:JWT});
 }
 
 module.exports = Login
