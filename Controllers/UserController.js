@@ -50,11 +50,11 @@ let AddToCart = async (req, res) => {
 }
 
 let getCart = async (req, res) => {
-    let user = await UserModel.findOne({ email: req.body.email.toLowerCase() });
+    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
     if (user) {
         res.status(200).json({ data: user.cart })
     } else {
-        res.status(200).json({ message: "Not Found Email=" + req.body.email })
+        res.status(200).json({ message: "Not Found Email=" + req.params.email })
     }
 }
 module.exports = {
