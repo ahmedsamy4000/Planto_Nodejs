@@ -5,9 +5,48 @@ const bodyparser=require("body-parser");
 const path=require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer=require('multer');
 
 
 mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.mongodb.net/Planto");
+
+
+const storage = multer.diskStorage({
+    destination: './uploads/',
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+  });
+
+
+  const upload = multer({
+    storage: storage
+  }).single('image');
+
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Allow specified HTTP methods
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept'); // Allow specified headers
+    next();
+  });
+
+  app.post('/upload', (req, res) => {
+    upload(req, res, (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error uploading image.' });
+      } else {
+        if (!req.file) {
+          res.status(400).json({ error: 'No file uploaded.' });
+        } else {
+          res.json({ imageUrl: `http://localhost:${port}/${req.file.filename}`});
+        }
+      }
+    });
+  });
+
+
+  app.use(express.static('uploads'));
 
 //#region MiddleWares
 app.use(bodyparser.urlencoded({extended:true}));
