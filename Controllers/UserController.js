@@ -35,7 +35,7 @@ let AddToCart = async (req, res) => {
             user.cart = [];
         }
         let myCart = user.cart;
-        myCart.push({ product: req.body.product, quantity: req.body.quantity });
+        myCart.push({ product: req.body.product, quantity: req.body.quantity,size:req.body.size });
         let newUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
             "cart": myCart, "name": user.name, "email": user.email,
             "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
@@ -48,8 +48,18 @@ let AddToCart = async (req, res) => {
     }
     return res.status(200).json({ message: "false" })
 }
+
+let getCart = async (req, res) => {
+    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
+    if (user) {
+        res.status(200).json({ data: user.cart })
+    } else {
+        res.status(200).json({ message: "Not Found Email=" + req.params.email })
+    }
+}
 module.exports = {
     GetUserByEmail,
     UpdateUser,
-    AddToCart
+    AddToCart,
+    getCart
 }
