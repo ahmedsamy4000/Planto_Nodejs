@@ -66,6 +66,7 @@ let updateProductByName = async (req, res) => {
 let deleteProductByName = async (req, res) => {
     try {
         let name = req.params.name;
+
         let result = await ProductModel.deleteProductByName(name);
         if (result) {
             res.status(200).json({ message: "Deleted successfully" });
@@ -77,11 +78,32 @@ let deleteProductByName = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+const searchProductByName = async (req, res) => {
+  try {
+    const name = req.params.name.toLowerCase(); 
+    let allProducts = await ProductModel.getallProducts();
+
+    const products = [];
+
+    for (const product of allProducts) {
+      if (product.name.toLowerCase().includes(name)) {
+        products.push(product);
+      }
+    }
+
+    res.json(products);
+  } catch (error) {
+    console.error("Error searching products by name:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 module.exports = {
     getallProducts,
     getProductByName,
     addNewProduct,
     updateProductByName,
-    deleteProductByName
+    deleteProductByName,
+    searchProductByName
 };

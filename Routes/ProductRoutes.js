@@ -16,5 +16,7 @@ router.post("/",product_controller.addNewProduct);
 router.put("/:name",product_controller.updateProductByName);
 
 router.delete("/:name",product_controller.deleteProductByName);
+router.get("/search/:name",product_controller.searchProductByName);
+
 
 module.exports=router;
