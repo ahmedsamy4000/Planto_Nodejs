@@ -35,7 +35,20 @@ let AddToCart = async (req, res) => {
             user.cart = [];
         }
         let myCart = user.cart;
-        myCart.push({ product: req.body.product, quantity: req.body.quantity,size:req.body.size });
+        let isExist=false;
+        for(let item of myCart){
+            if(item.product.name==req.body.product.name)
+            {
+                if(item.size==req.body.size)
+                {
+                    isExist=true;
+                    item.quantity+=req.body.quantity;
+                }
+            }
+        }
+        if(!isExist){
+            myCart.push({ product: req.body.product, quantity: req.body.quantity, size: req.body.size });
+        }
         let newUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
             "cart": myCart, "name": user.name, "email": user.email,
             "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
@@ -49,7 +62,7 @@ let AddToCart = async (req, res) => {
     return res.status(200).json({ message: "false" })
 }
 
-let getCart = async (req, res) => {
+let GetCart = async (req, res) => {
     let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
     if (user) {
         res.status(200).json({ data: user.cart })
@@ -57,9 +70,37 @@ let getCart = async (req, res) => {
         res.status(200).json({ message: "Not Found Email=" + req.params.email })
     }
 }
+let UpdateCart = async (req, res) => {
+    req.body.email = req.body.email.toLowerCase();
+    let user = await UserModel.findOne({ email: req.body.email });
+    user.cart[req.body.index]=req.body.cart;
+    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+        "cart": user.cart, "name": user.name, "email": user.email,
+        "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
+    });
+    if (result) {
+        return res.status(200).json({ message: "true" });
+    }
+    return res.status(200).json({ message: "false" });
+}
+let DeleteFromCart = async (req, res) => {
+    req.body.email = req.body.email.toLowerCase();
+    let user = await UserModel.findOne({ email: req.body.email });
+    user.cart.splice(req.body.index, 1);
+    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+        "cart": user.cart, "name": user.name, "email": user.email,
+        "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
+    });
+    if (result) {
+        return res.status(200).json({ message: "true" });
+    }
+    return res.status(200).json({ message: "false" });
+}
 module.exports = {
     GetUserByEmail,
     UpdateUser,
     AddToCart,
-    getCart
+    GetCart,
+    UpdateCart,
+    DeleteFromCart
 }
