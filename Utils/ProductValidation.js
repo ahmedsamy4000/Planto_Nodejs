@@ -7,14 +7,14 @@ const ProductSchema = {
         name: { type: "string", pattern: "^[a-zA-Z]*$" },
         price: { type: "string" },
         description: { type: "string" },
-        images: { type: "array", items: { type: "string" } },
+        images: { type: "array"},
         stock: { type: "number", minimum: 0 },
         category: { type: "string", enum: ['Indoor', 'Outdoor', 'Both'] },
         count: { type: "number" },
         rate: { type: "number", minimum: 1, maximum: 5 }
     },
     required: ["name", "price", "description", "images", "stock", "category", "count", "rate"],
-    additionalProperties: false
+    additionalProperties: true
 };
 
 module.exports = ajv.compile(ProductSchema);

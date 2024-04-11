@@ -9,7 +9,15 @@ let GetUserByEmail = async (req, res) => {
         res.status(200).json({ message: "Not Found Email=" + req.params.email })
     }
 }
-
+let GetUserByID = async (req, res) => {
+    console.log(+req.params.id)
+    let user = await UserModel.findOne({ _id: +req.params.id });
+    if (user) {
+        res.status(200).json({ data: user })
+    } else {
+        res.status(200).json({ message: "Not Found ID " + req.params.id })
+    }
+}
 let UpdateUser = async (req, res) => {
     if (UserValidation(req.body)) {
         let salt = await bcrypt.genSalt(10);
@@ -102,5 +110,6 @@ module.exports = {
     AddToCart,
     GetCart,
     UpdateCart,
-    DeleteFromCart
+    DeleteFromCart,
+    GetUserByID
 }

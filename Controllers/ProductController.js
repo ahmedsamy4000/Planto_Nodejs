@@ -3,18 +3,18 @@ const ProductModel = require("../Models/ProductModel");
 
 let getallProducts = async (req, res) => {
     try {
-        let allProducts = await ProductModel.getallProducts();
+        let allProducts = await ProductModel.find();
         res.status(200).json({ data: allProducts });
     } catch (error) {
         console.error("Error retrieving products:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-};
+}
 
 let getProductByName = async (req, res) => {
     try {
         let name = req.params.name;
-        let filterProduct = await ProductModel.findProductsByName(name);
+        let filterProduct = await ProductModel.findOne({name:name})
         if (filterProduct) {
             res.json({ message: "Founded", data: filterProduct });
         } else {
@@ -43,14 +43,11 @@ let addNewProduct = async (req, res) => {
 
 let updateProductByName = async (req, res) => {
     try {
-        let name = req.params.name;
-        let updatedProduct = null;
+        console.log(req.body)
         if (productValidation(req.body)) {
-            req.body.name = name;
-            updatedProduct = req.body;
-            let result = await ProductModel.updateProductByName(name, updatedProduct);
+            let result = await ProductModel.findOneAndUpdate({name:req.params.name},req.body)
             if (result) {
-                res.status(200).json({ data: updatedProduct, message: "Updated successfully" });
+                res.status(200).json({ data:req.body , message: "Updated successfully" });
             } else {
                 res.status(404).json({ message: "Product not found" });
             }
@@ -65,9 +62,7 @@ let updateProductByName = async (req, res) => {
 
 let deleteProductByName = async (req, res) => {
     try {
-        let name = req.params.name;
-
-        let result = await ProductModel.deleteProductByName(name);
+        let result = await ProductModel.findByIdAndDelete({name:req.params.name})
         if (result) {
             res.status(200).json({ message: "Deleted successfully" });
         } else {
@@ -81,7 +76,7 @@ let deleteProductByName = async (req, res) => {
 const searchProductByName = async (req, res) => {
   try {
     const name = req.params.name.toLowerCase(); 
-    let allProducts = await ProductModel.getallProducts();
+    let allProducts = await ProductModel.find();
 
     const products = [];
 
@@ -90,7 +85,6 @@ const searchProductByName = async (req, res) => {
         products.push(product);
       }
     }
-
     res.json(products);
   } catch (error) {
     console.error("Error searching products by name:", error);
