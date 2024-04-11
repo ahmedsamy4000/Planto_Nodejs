@@ -30,7 +30,7 @@ let addNewProduct = async (req, res) => {
     try {
         if (productValidation(req.body)) {
             let newProduct = new ProductModel(req.body);
-            await newProduct.saveProduct();
+            await newProduct.save();
             res.status(200).json({ data: newProduct, message: "Added successfully" });
         } else {
             res.status(400).json({ message: productValidation.errors[0].message });
