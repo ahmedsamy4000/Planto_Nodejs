@@ -30,7 +30,7 @@ let Register = async (req, res) => {
             
         })
     } else {
-        res.status(200).json({ message: false,error:userValidation.errors[0].messag });
+        res.status(200).json({ message: false,error:userValidation.errors[0].message });
     }
 }
 

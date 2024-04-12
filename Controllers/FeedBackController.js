@@ -9,10 +9,8 @@ const FeedBackModel = require("../Models/FeedBackModel");
 
 
 let getallFeedbacks= async (req,res)=>{
-    
     let allFeedbacks=await FeedBackModel.find();
-    res.status(200).json({data:allFeedbacks});
-
+    return res.status(200).json({data:allFeedbacks});
 };
 
 let getFeedbackById= async (req,res)=>{
