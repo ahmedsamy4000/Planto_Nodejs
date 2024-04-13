@@ -91,7 +91,42 @@ const searchProductByName = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const searchProductByCategory = async (req, res) => {
+    try {
+      const category = req.params.category; 
+      let allProducts = await ProductModel.find({category:category})
+      res.json(allProducts);
 
+    } catch (error) {
+      console.error("Error searching products by name:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  let calcProductRate = async (req, res) => {
+    try {
+        let productName = req.params.name;
+        const newRating = req.body.rate;
+ 
+        let filterProduct = await ProductModel.findOne({ name: productName })
+ 
+        // Update the product's rating
+        filterProduct.rate = newRating;
+ 
+        if (!filterProduct) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+ 
+        let result = await ProductModel.findOneAndUpdate({ name: productName }, filterProduct)
+        if (result) {
+            res.status(200).json({ data: req.body, message: "Rating submitted successfully" });
+        } else {
+            res.status(404).json({ message: "Product not found" });
+        }
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 module.exports = {
     getallProducts,
@@ -99,5 +134,7 @@ module.exports = {
     addNewProduct,
     updateProductByName,
     deleteProductByName,
-    searchProductByName
+    searchProductByName,
+    searchProductByCategory,
+    calcProductRate
 };
