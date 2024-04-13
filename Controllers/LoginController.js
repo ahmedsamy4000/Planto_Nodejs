@@ -4,7 +4,6 @@ const userModel = require('../Models/UserModel')
 let Login = async (req, res) => {
     req.body.email = req.body.email.toLowerCase();
     let user = await userModel.findOne({ email: req.body.email });
-
     if (!user)
         return res.status(200).json({ message: false });
 
@@ -16,5 +15,6 @@ let Login = async (req, res) => {
     res.header("x-auth-token", JWT);
     return res.status(200).json({ message: true ,token:JWT});
 }
-
 module.exports = Login
+
+

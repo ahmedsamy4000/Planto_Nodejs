@@ -7,8 +7,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const multer=require('multer');
 const stripe = require('stripe')("sk_test_51P3jOo05pDshyzTFUZnJ9jfEU4E0INnoRDzj34u2C6eYiWNrWk5YsgydxBQiDLNtNLjxt3yAsJkwizHEc7JjKmzT00buABLvru");
-
-
+const session = require('express-session'); // Add this line
+const passport = require('./MiddleWares/googleauth'); 
+const googleRoutes = require('./Routes/googleloginRoutes');
 mongoose.connect("mongodb+srv://merafahmy219:NN6AM42JAjsMhdu8@cluster0.a9arhwd.mongodb.net/Planto");
 
 
@@ -86,6 +87,34 @@ const receiptRouter=require("./Routes/ReceiptRoutes");
 app.use("/api/receipt",receiptRouter);
 //#endregion
 
+
+
+//#region google
+function isLoggedIn(req, res, next) {
+  req.user ? next() : res.sendStatus(401);
+}
+
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/api/google', googleRoutes); 
+
+app.get('/protected', isLoggedIn, (req, res) => {
+  res.send(`Hello ${req.user.displayName}`);
+  console.log(req.user);
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  req.session.destroy();
+  res.send('Goodbye!');
+});
+
+app.get('/auth/google/failure', (req, res) => {
+  res.send('Failed to authenticate..');
+});
+//#endregion
 
 
 //////////////////////////////////////////////////////////////
