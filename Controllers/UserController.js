@@ -1,29 +1,26 @@
 const UserModel = require('../Models/UserModel')
 const UserValidation = require('../Utils/UserValidation')
 const bcrypt = require('bcrypt')
-let GetUserByEmail = async (req, res) => {
-    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
+const jwt = require('jsonwebtoken')
+
+let GetUser = async (req, res) => {
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     if (user) {
         res.status(200).json({ data: user })
     } else {
-        res.status(200).json({ message: "Not Found Email=" + req.params.email })
-    }
-}
-let GetUserByID = async (req, res) => {
-    console.log(+req.params.id)
-    let user = await UserModel.findOne({ _id: +req.params.id });
-    if (user) {
-        res.status(200).json({ data: user })
-    } else {
-        res.status(200).json({ message: "Not Found ID " + req.params.id })
+        res.status(200).json({ message: "Not Found Email=" + decoded.email })
     }
 }
 let UpdateUser = async (req, res) => {
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
     if (UserValidation(req.body)) {
         let salt = await bcrypt.genSalt(10);
         let hash = await bcrypt.hash(req.body.password, salt);
         req.body.password = hash;
-        let newUser = await UserModel.findOneAndUpdate({ email: req.params.email }, {
+        let newUser = await UserModel.findOneAndUpdate({ email: decoded.email }, {
             "name": req.body.name, "email": req.body.email,
             "phone": req.body.phone, "gender": req.body.gender, "address": req.body.addres, "age": req.body.age, "password": req.body.password
         });
@@ -36,28 +33,27 @@ let UpdateUser = async (req, res) => {
 }
 
 let AddToCart = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email});
     if (user) {
         if (user.cart == undefined) {
             user.cart = [];
         }
         let myCart = user.cart;
-        let isExist=false;
-        for(let item of myCart){
-            if(item.product.name==req.body.product.name)
-            {
-                if(item.size==req.body.size)
-                {
-                    isExist=true;
-                    item.quantity+=req.body.quantity;
+        let isExist = false;
+        for (let item of myCart) {
+            if (item.product.name == req.body.product.name) {
+                if (item.size == req.body.size) {
+                    isExist = true;
+                    item.quantity += req.body.quantity;
                 }
             }
         }
-        if(!isExist){
+        if (!isExist) {
             myCart.push({ product: req.body.product, quantity: req.body.quantity, size: req.body.size });
         }
-        let newUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+        let newUser = await UserModel.findOneAndUpdate({ email: decoded.email }, {
             "cart": myCart, "name": user.name, "email": user.email,
             "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
         });
@@ -136,18 +132,21 @@ let DeleteFromFavourites=async(req,res)=>{
 }
 
 let GetCart = async (req, res) => {
-    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     if (user) {
         res.status(200).json({ data: user.cart })
     } else {
-        res.status(200).json({ message: "Not Found Email=" + req.params.email })
+        res.status(200).json({ message: "Not Found Email=" + decoded.email })
     }
 }
 let UpdateCart = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
-    user.cart[req.body.index]=req.body.cart;
-    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
+    user.cart[req.body.index] = req.body.cart;
+    let result = await UserModel.findOneAndUpdate({ email: decoded.email }, {
         "cart": user.cart, "name": user.name, "email": user.email,
         "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
     });
@@ -157,10 +156,11 @@ let UpdateCart = async (req, res) => {
     return res.status(200).json({ message: "false" });
 }
 let DeleteFromCart = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     user.cart.splice(req.body.index, 1);
-    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+    let result = await UserModel.findOneAndUpdate({ email: decoded.email }, {
         "cart": user.cart, "name": user.name, "email": user.email,
         "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password
     });
@@ -170,7 +170,7 @@ let DeleteFromCart = async (req, res) => {
     return res.status(200).json({ message: "false" });
 }
 module.exports = {
-    GetUserByEmail,
+    GetUser,
     UpdateUser,
     AddToCart,
     GetCart,
@@ -179,6 +179,5 @@ module.exports = {
     AddToFavourites,
     GetFavourites,
     UpdateFavourites,
-    DeleteFromFavourites,
-    GetUserByID
+    DeleteFromFavourites
 }

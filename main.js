@@ -6,7 +6,6 @@ const path=require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer=require('multer');
-const stripe = require('stripe')("sk_test_51P3jOo05pDshyzTFUZnJ9jfEU4E0INnoRDzj34u2C6eYiWNrWk5YsgydxBQiDLNtNLjxt3yAsJkwizHEc7JjKmzT00buABLvru");
 const session = require('express-session'); // Add this line
 const passport = require('./MiddleWares/googleauth'); 
 const googleRoutes = require('./Routes/googleloginRoutes');
@@ -121,27 +120,5 @@ app.get('/auth/google/failure', (req, res) => {
 const feedbackRoutes=require("./Routes/FeedBackRoutes");
 const { name } = require('ejs');
 app.use("/api/feedbacks",feedbackRoutes);
-
-//#region Payment
-app.post('/checkout', async (req, res)=>{
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: [{
-      price_data: {
-        product_data: {
-          name: req.body.name
-        },
-        unit_amount: 10000,
-        currency: 'egp',
-      },
-      quantity: 1,
-    }],
-    mode: 'payment',
-    success_url: 'https://localhost:4200/welcome',
-    cancel_url: 'https://localhost:4200/error',
-  });
-  res.json({url: session.url});
-})
-//#endregion
 
 app.listen(port,()=>{console.log("http://localhost:"+port)});
