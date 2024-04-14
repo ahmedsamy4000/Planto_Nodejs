@@ -8,10 +8,10 @@ const UserPermission = require("../MiddleWares/UserPermessions");
 router.get('/',AdminPermission,receipt.GetAllReceipts);
 // router.get('/:id', receipt.GetReceiptByID);
 router.post('/',receipt.AddReceipt);
-router.put('/:id', AdminPermission,receipt.UpdateReceipt);
-router.delete('/:id', AdminPermission, receipt.DeleteReceipt);
-router.get('/:month', AdminPermission,receipt.getReceiptsByMonth);
-router.get('/total/:month', AdminPermission, receipt.totalProducts);
+router.put('/:id',receipt.UpdateReceipt);
+router.delete('/:id', receipt.DeleteReceipt);
+router.get('/:month',receipt.getReceiptsByMonth);
+router.get('/total/:month', receipt.totalProducts);
 
 
 module.exports = router

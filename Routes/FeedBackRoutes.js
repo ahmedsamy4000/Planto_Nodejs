@@ -6,15 +6,14 @@ const AdminPermission = require('../MiddleWares/AdminPermissions');
 
 let courses=[];
 let crsID=0;
-router.get("/",AdminPermission,feedback_controller.getallFeedbacks);
+router.get("/",feedback_controller.getallFeedbacks);
 
-router.get("/:id",AdminPermission,feedback_controller.getFeedbackById);
+router.get("/:id",feedback_controller.getFeedbackById);
 
-router.post("/",AdminPermission,feedback_controller.addNewFeedback);
+router.post("/",feedback_controller.addNewFeedback);
 
+router.put("/:id",feedback_controller.updateFeedbackById);
 
-router.put("/:id",AdminPermission,feedback_controller.updateFeedbackById);
-
-router.delete("/:id",AdminPermission,feedback_controller.deleteFeedbackById);
+router.delete("/:id",feedback_controller.deleteFeedbackById);
 
 module.exports=router;
