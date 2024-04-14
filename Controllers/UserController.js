@@ -67,8 +67,9 @@ let AddToCart = async (req, res) => {
 }
 
 let AddToFavourites = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     if (user) {
         if (user.fav == undefined) {
             user.fav = [];
@@ -83,7 +84,7 @@ let AddToFavourites = async (req, res) => {
         if (!isExist) {
             fav.push({ product: req.body.product });
         }
-        let UpdatedUser = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+        let UpdatedUser = await UserModel.findOneAndUpdate({ email: decoded.email }, {
             "cart": user.cart, "name": user.name, "email": user.email,
             "phone": user.phone, "gender": user.gender, "address": user.addres, "age": user.age, "password": user.password, "fav": user.fav
         });
@@ -96,19 +97,22 @@ let AddToFavourites = async (req, res) => {
 }
 
 let GetFavourites = async (req, res) => {
-    let user = await UserModel.findOne({ email: req.params.email.toLowerCase() });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     if (user) {
         res.status(200).json({ messeage: "founded", data: user.fav })
     } else {
-        res.status(200).json({ message: "Email Not Found : " + req.params.email });
+        res.status(200).json({ message: "Email Not Found : " + decoded.email });
     }
 }
 
 let UpdateFavourites = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     user.fav[req.body.index] = req.body.fav;
-    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+    let result = await UserModel.findOneAndUpdate({ email: decoded.email }, {
         "fav": user.fav, "name": user.name, "email": user.email, "phone": user.phone, "gender": user.gender, "address": user.addres,
         "age": user.age, "password": user.password
     });
@@ -118,10 +122,11 @@ let UpdateFavourites = async (req, res) => {
     return res.status(400).json({ message: "Update Failed" });
 }
 let DeleteFromFavourites = async (req, res) => {
-    req.body.email = req.body.email.toLowerCase();
-    let user = await UserModel.findOne({ email: req.body.email });
+    let JWT = req.header('token');
+    let decoded = jwt.decode(JWT, 'Planto')
+    let user = await UserModel.findOne({ email: decoded.email });
     user.fav.splice(req.body.index, 1);
-    let result = await UserModel.findOneAndUpdate({ email: req.body.email }, {
+    let result = await UserModel.findOneAndUpdate({ email: decoded.email }, {
         "fav": user.fav, "name": user.name, "email": user.email, "phone": user.phone, "gender": user.gender, "address": user.addres,
         "age": user.age, "password": user.password
     });

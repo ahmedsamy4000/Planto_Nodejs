@@ -8,7 +8,7 @@ router.post('/cart/add', user.AddToCart);
 router.get('/get/cart', user.GetCart);
 router.put('/cart', user.UpdateCart);
 router.post('/cart/delete', user.DeleteFromCart);
-router.get('/favourites/:email',user.GetFavourites);
+router.get('/favourites',user.GetFavourites);
 router.post('/favourites/add',user.AddToFavourites);
 router.put('/favourites',user.UpdateFavourites);
 router.post('/favourites/delete',user.DeleteFromFavourites);
