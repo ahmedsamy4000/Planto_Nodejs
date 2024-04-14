@@ -8,11 +8,12 @@ ajv.addFormat('date-time', {
 let ReceiptSchema={
     type:"object",
     properties:{
+        user: {type: "string"},
         product: {type: "array", minItems: 1},
         date: {type: "string", format: "date-time"},
         totalPrice: {type:"number", minimum: 1}
     },
-    required:["product", "totalPrice"],
+    required:["product", "totalPrice", "user"],
     additionalProperties:false
 }
 
