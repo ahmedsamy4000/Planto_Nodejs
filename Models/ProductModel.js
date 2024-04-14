@@ -9,6 +9,7 @@ let ProductSchema=new mongoose.Schema({
        "stock": Number,
         "category": String,
         "count": Number,
-        "rate" :Number
+        "rate" :Number,
+        "numberOfRates" :Number
 })  
 module.exports=mongoose.model("products",ProductSchema)

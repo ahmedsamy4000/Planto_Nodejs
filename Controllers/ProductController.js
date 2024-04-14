@@ -106,11 +106,13 @@ const searchProductByCategory = async (req, res) => {
     try {
         let productName = req.params.name;
         const newRating = req.body.rate;
+        const newNumber = req.body.number;
  
         let filterProduct = await ProductModel.findOne({ name: productName })
  
         // Update the product's rating
         filterProduct.rate = newRating;
+        filterProduct.numberOfRates = newNumber;
  
         if (!filterProduct) {
             return res.status(404).json({ error: 'Product not found' });

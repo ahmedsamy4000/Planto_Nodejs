@@ -11,9 +11,10 @@ const ProductSchema = {
         stock: { type: "number", minimum: 0 },
         category: { type: "string", enum: ['Indoor', 'Outdoor', 'Both'] },
         count: { type: "number" },
-        rate: { type: "number", minimum: 0, maximum: 5 }
+        rate: { type: "number", minimum: 0, maximum: 5 },
+        numberOfRates: { type: "number", minimum: 0}
     },
-    required: ["name", "price", "description", "images", "stock", "category", "count", "rate"],
+    required: ["name", "price", "description", "images", "stock", "category", "count", "rate","numberOfRates"],
     additionalProperties: true
 };
 
