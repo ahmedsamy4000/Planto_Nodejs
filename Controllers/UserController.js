@@ -22,7 +22,7 @@ let UpdateUser = async (req, res) => {
         req.body.password = hash;
         let newUser = await UserModel.findOneAndUpdate({ email: decoded.email }, {
             "name": req.body.name, "email": req.body.email,
-            "phone": req.body.phone, "gender": req.body.gender, "address": req.body.addres, "age": req.body.age, "password": req.body.password
+            "phone": req.body.phone, "gender": req.body.gender, "address": req.body.address, "age": req.body.age, "password": req.body.password
         });
         if (newUser) {
             res.status(200).json({ message: "Updated successfully" })
