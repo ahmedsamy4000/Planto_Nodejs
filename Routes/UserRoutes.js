@@ -12,5 +12,5 @@ router.get('/favourites/:email',user.GetFavourites);
 router.post('/favourites/add',user.AddToFavourites);
 router.put('/favourites',user.UpdateFavourites);
 router.post('/favourites/delete',user.DeleteFromFavourites);
-
+router.delete('/cart/alldelete', user.DeleteCart);
 module.exports = router
