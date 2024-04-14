@@ -51,7 +51,7 @@ let AddToCart = async (req, res) => {
             }
         }
         if (!isExist) {
-            myCart.push({ product: req.body.product, quantity: req.body.quantity, size: req.body.size });
+            myCart.push({ product: req.body.product, quantity: req.body.quantity, size: req.body.size ,price:req.body.price});
         }
         let newUser = await UserModel.findOneAndUpdate({ email: decoded.email }, {
             "cart": myCart, "name": user.name, "email": user.email,

@@ -4,7 +4,7 @@ const ajv = new Ajv();
 const ProductSchema = {
     type: "object",
     properties: {
-        name: { type: "string", pattern: "^[a-zA-Z]*$" },
+        name: { type: "string", pattern: "^[a-z A-Z]*$" },
         price: { type: "string" },
         description: { type: "string" },
         images: { type: "array"},

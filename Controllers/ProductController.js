@@ -55,6 +55,7 @@ let updateProductByName = async (req, res) => {
             res.status(400).json({ message: productValidation.errors[0].message });
         }
     } catch (error) {
+        console.log(req.params.name)
         console.error("Error updating product by name:", error);
         res.status(500).json({ message: "Internal server error" });
     }
