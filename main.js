@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
         if (!req.file) {
           res.status(400).json({ error: 'No file uploaded.' });
         } else {
-          res.json({ imageUrl: `http://localhost:${port}/${req.file.filename}`});
+          res.json({ imageUrl: `https://planto-nodejs.onrender.com/${req.file.filename}`});
         }
       }
     });
